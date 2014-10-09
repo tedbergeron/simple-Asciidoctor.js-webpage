@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <title>Asciidoctor.js Editor | Viewer</title>
+  <link rel="stylesheet" type="text/css" href="themes/asciidoctor.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css" />
+</head>
+
+<body>
+  <div id="editorPanel"  style="float: left;">
+    <!-- do not indent text inside the textarea. -->
+    <textarea id="txtAsciiDoc" rows="15" cols="40" border=1>
+== AsciiDoc
+
+TIP: Use Asciidoctor.js
+
+Document generated with Asciidoctor {asciidoctor-version}.
+    </textarea>
+  </div>
+
+  <div id="viewerPanel" style="float: left;">
+    <div id="content">
+        This is content area that is replaced with the rendered AsciiDoc.
+    </div>
+  </div>
+
+  <script src="js/opal.js"></script>
+  <script src="js/asciidoctor.js"></script>
+
+  <script type="text/javascript">
+      var isCalled = false;
+
+      function renderAsciiDoc() {
+          if (!isCalled) {
+              isCalled = true;
+
+              // add attribute options for Font-Awesome by default
+              var asciidoctorAttributes = Opal.hash2(['attributes'], { 'attributes': ['icons=font@'] });  // by adding the @ symbol, attributes added in line in the asciidoc text takes precedence over this hard-coded attribute
+
+              //var html_doc = Opal.Asciidoctor.$render(document.getElementById("txtAsciiDoc").value);
+              var html_doc = Opal.Asciidoctor.$render(document.getElementById("txtAsciiDoc").value, asciidoctorAttributes);
+
+              document.getElementById('content').innerHTML = html_doc;
+              return false;
+          }
+      }
+
+      setInterval('isCalled = renderAsciiDoc()', 1000);
+
+      // Render HTML from AsciiDoc text
+      document.getElementById('txtAsciiDoc').addEventListener('keydown', function (e) {
+          isCalled = renderAsciiDoc();
+      }, false);
+  </script>
+</body>
+</html>
